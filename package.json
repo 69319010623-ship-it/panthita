@@ -1,0 +1,9 @@
+{
+  "name": "basic-web-server",
+  "version": "1.0.0",
+  "description": "My basic web server for lab",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  }
+}
