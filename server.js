@@ -24,6 +24,8 @@ const server = http.createServer(async (req, res) => {
       studentRows += `<tr><td>${row.student_id}</td><td>${row.student_name}</td></tr>`;
     });
 
+    const totalRecords = result.rows.length;
+
     res.end(`
       <!DOCTYPE html>
       <html lang="th">
@@ -31,7 +33,7 @@ const server = http.createServer(async (req, res) => {
           <meta charset="UTF-8">
           <meta name="viewport" content="width=device-width, initial-scale=1.0">
           <title>Web Server - Student Database</title>
-          <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+          <link href="https://googleapis.com" rel="stylesheet">
           <style>
             :root{
               --accent-1: #7b61ff;
@@ -245,7 +247,7 @@ const server = http.createServer(async (req, res) => {
             
             <div class="status-badge">
               <div class="pulse-dot" aria-hidden="true"></div>
-              เชื่อมต่อกับฐานข้อมูล: สำเร็จ ✓
+              เชื่อมต่อกับฐานข้อมูลสำเร็จ
             </div>
 
             <table>
@@ -256,70 +258,35 @@ const server = http.createServer(async (req, res) => {
                 </tr>
               </thead>
               <tbody>
-                ${studentRows}
+                ${studentRows || '<tr><td colspan="2" style="text-align:center;">ไม่พบข้อมูลนักศึกษา</td></tr>'}
               </tbody>
             </table>
 
             <div class="record-count">
-              พบข้อมูลทั้งหมด: <strong>${result.rows.length}</strong> คน
+              จำนวนนักศึกษาทั้งหมด: ${totalRecords} คน
             </div>
           </div>
         </body>
       </html>
     `);
-  } catch (err) {
-    // กรณีเชื่อมต่อไม่ได้หรือมีข้อผิดพลาด
-    console.error('Error:', err);
+  } catch (error) {
+    console.error('Database connection error:', error);
+    res.statusCode = 500;
     res.end(`
       <!DOCTYPE html>
-      <html lang="th">
+      <html>
         <head>
           <meta charset="UTF-8">
-          <title>เกิดข้อผิดพลาด</title>
+          <title>Database Error</title>
           <style>
-            body {
-              font-family: 'Sarabun', sans-serif;
-              background: linear-gradient(135deg, #0f172a 0%, #0b1220 100%);
-              color: #ffffff;
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              min-height: 100vh;
-              margin: 0;
-              padding: 20px;
-            }
-            .error-box {
-              background: rgba(255,255,255,0.08);
-              border: 1px solid rgba(255,77,77,0.3);
-              border-radius: 12px;
-              padding: 32px;
-              max-width: 600px;
-              text-align: center;
-            }
-            h1 { color: #ff4d4d; margin: 0 0 16px 0; }
-            p { color: rgba(255,255,255,0.8); line-height: 1.6; }
-            .error-detail {
-              background: rgba(0,0,0,0.3);
-              border-left: 3px solid #ff4d4d;
-              padding: 12px 16px;
-              margin-top: 16px;
-              text-align: left;
-              font-family: monospace;
-              font-size: 13px;
-              color: #ffaaaa;
-            }
+            body { background: #0f172a; color: #f43f5e; font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+            .error-box { padding: 30px; border: 1px solid #f43f5e; border-radius: 8px; background: rgba(244,63,94,0.1); max-width: 500px; text-align: center; }
           </style>
         </head>
         <body>
           <div class="error-box">
-            <h1>❌ เกิดข้อผิดพลาด!</h1>
-            <p>ไม่สามารถเชื่อมต่อกับฐานข้อมูลได้</p>
-            <div class="error-detail">
-              ${err.message}
-            </div>
-            <p style="margin-top: 16px; font-size: 14px; color: rgba(255,255,255,0.6);">
-              โปรดตรวจสอบ DATABASE_URL environment variable
-            </p>
+            <h2>เกิดข้อผิดพลาดในการเชื่อมต่อฐานข้อมูล</h2>
+            <p>โปรดตรวจสอบ DATABASE_URL ใน Environment Variable</p>
           </div>
         </body>
       </html>
@@ -328,6 +295,5 @@ const server = http.createServer(async (req, res) => {
 });
 
 server.listen(port, () => {
-  console.log(`Web Server กำลังทำงานที่ Port ${port}`);
-  console.log(`DATABASE_URL: ${process.env.DATABASE_URL ? '✓ ตั้งค่าแล้ว' : '✗ ยังไม่ได้ตั้งค่า'}`);
+  console.log(`Server running at http://localhost:${port}/`);
 });
