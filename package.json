@@ -1,7 +1,15 @@
 {
- "name": "my-first-server",
- "version": "1.0.0",
- "scripts": {
- "start": "node server.js"
- }
- }
+  "name": "my-first-server",
+  "version": "1.0.0",
+  "description": "Simple Node.js server that reads students from PostgreSQL",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=14"
+  },
+  "dependencies": {
+    "pg": "^8.11.0"
+  }
+}
