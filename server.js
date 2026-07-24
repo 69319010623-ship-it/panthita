@@ -166,7 +166,7 @@ function buildHtml(rows) {
 
   html += `
         <div class="footer">
-          ✨ ขอบคุณที่เข้ามาเยี่ยมชมเว็บไซต์ของแก้มนะคะ 🥰<br>
+          ✨ ขอบคุณที่เข้ามาเยี่ยมชมเว็บไซต์ของแฟรี่นะคะ 🥰<br>
           <small>Powered by Node.js + PostgreSQL + Railway</small>
         </div>
       </div>
@@ -178,7 +178,7 @@ function buildHtml(rows) {
 }
 
 const server = http.createServer(async (req, res) => {
-  // รองรับแค่ GET ที่ root path; ถ้าอยากให้เสถียรกว่านี้ ให้ใช้ framework เช่น Express
+  // รองรับเฉพาะ GET ที่ root path
   if (req.method !== 'GET' || req.url !== '/') {
     res.statusCode = 404;
     res.setHeader('Content-Type', 'text/plain; charset=utf-8');
@@ -275,4 +275,3 @@ process.on('uncaughtException', (err) => {
   console.error('Uncaught exception:', err);
   shutdown('uncaughtException');
 });
-
